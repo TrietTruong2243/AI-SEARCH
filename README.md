@@ -8,3 +8,4 @@ B2  Chạy các level cần thiết
 
 # NOTE
 Chỉnh sửa phần của mình cho giống bài ở Level 1
+Bỏ file Main.py
