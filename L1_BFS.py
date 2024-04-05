@@ -1,4 +1,3 @@
-# Nhấn phím space để chạy chương trình
 import pygame
 import sys
 import subprocess
@@ -6,7 +5,8 @@ import subprocess
 window_width = 800
 window_height = 600
 
-window = pygame.display.set_mode((window_width, window_height))
+
+window = pygame.display.set_mode((window_width + 200, window_height))
 
 
 LIGHT_BLACK = (50, 50, 50)
@@ -17,6 +17,10 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 BLUE = (78, 27, 202)
+
+
+# Thêm trước khi sử dụng font
+pygame.font.init()
 
 # read from txt input.txt
 def read_input():
@@ -39,31 +43,6 @@ def read_input():
     
     return size, start, goal, num_obstacles, obstacles
 
-
-def draw_line(x0, y0, x1, y1):
-    dx = abs(x1 - x0)
-    dy = abs(y1 - y0)
-    sx = 1 if x0 < x1 else -1
-    sy = 1 if y0 < y1 else -1
-    err = dx - dy
-
-    points = []
-
-    while True:
-        points.append((x0, y0))
-
-        if x0 == x1 and y0 == y1:
-            break
-
-        e2 = 2 * err
-        if e2 > -dy:
-            err -= dy
-            x0 += sx
-        if e2 < dx:
-            err += dx
-            y0 += sy
-
-    return points
 
 def draw_line(x0, y0, x1, y1):
     dx = abs(x1 - x0)
@@ -132,13 +111,48 @@ class Box:
         self.queued = False
         self.neighbors = []
         self.previous = None
+         # Đánh số cho ô theo trục x và y mà không trùng lặp
+        self.number = None
+        
+        # Đánh số cho ô theo trục x và y mà không trùng lặp
+        self.number = None
+        if self.x == 0 and self.y != 0:  # Các ô ở vị trí x = 0, ngoại trừ ô gốc (0, 0)
+            self.number = size['y'] - self.y 
+        elif self.y == size["y"] and self.x != 0:  # Các ô ở vị trí y = 0, ngoại trừ ô gốc (0, 0)
+            self.number = self.x 
+        if self.x == 0 and self.y == 0:
+            self.number = size['y']
+
+        # Kiểm tra nếu ô có số thứ tự, thì đánh dấu là rào cản
+        if self.number is not None:
+            self.obstacle = 1
+          
 
     def show(self, window, color):
         pygame.draw.rect(window, color, (self.x * box_width,
                          self.y * box_height, box_width - 2, box_height - 2))
+        if self.start == 1:  # Nếu ô là ô bắt đầu, vẽ ký tự 'S' lên ô
+            font = pygame.font.Font(None, 36)  # Chọn font và kích thước
+            text = font.render('S', True, LIGHT_BLACK)  # Tạo đối tượng văn bản
+            text_rect = text.get_rect(center=(self.x * box_width + box_width // 2, self.y * box_height + box_height // 2))  # Đặt vị trí văn bản ở giữa của ô
+            window.blit(text, text_rect)
 
+        if self.end == 1:  # Nếu ô là ô kết thúc, vẽ ký tự 'E' lên ô
+            font = pygame.font.Font(None, 36)  # Chọn font và kích thước
+            text = font.render('G', True, LIGHT_BLACK)  # Tạo đối tượng văn bản
+            text_rect = text.get_rect(center=(self.x * box_width + box_width // 2, self.y * box_height + box_height // 2))  # Đặt vị trí văn bản ở giữa của ô
+            window.blit(text, text_rect)
+
+        if self.number is not None:  # Nếu ô có số thứ tự
+            font = pygame.font.Font(None, 24)  # Chọn font và kích thước
+            text = font.render(str(self.number), True, (255, 255, 255))  # Tạo đối tượng văn bản
+            text_rect = text.get_rect(center=(self.x * box_width + box_width // 2, self.y * box_height + box_height // 2))  # Đặt vị trí văn bản ở giữa của ô
+            window.blit(text, text_rect)
+
+    
     def setStart(self):
         self.start = 1
+
 
     def setEnd(self):
         self.end = 1
@@ -185,6 +199,8 @@ def main():
   
          
     start_box = grid[start["x"]][rows - 1 -start["y"]]
+ 
+
     start_box.setStart()
     start_box.visited = True
     queue.append(start_box)
@@ -194,6 +210,7 @@ def main():
         for point in points:
             x, y = point
             grid[x][rows - 1- y].setObstacle()
+          
 
     while True:
         for event in pygame.event.get():
