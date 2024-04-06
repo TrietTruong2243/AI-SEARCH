@@ -2,6 +2,7 @@ import pygame
 import sys
 import subprocess
 import queue
+import time
 window_width = 800
 window_height = 600
 
@@ -192,7 +193,11 @@ for i in range(cols):
 
 
 def main():
-
+    font = pygame.font.SysFont('Courier New', 20)
+    
+   
+    ##################
+    node_count  =0
     begin_search = False
     target_box = None
     searching = True
@@ -239,6 +244,7 @@ def main():
             sys.exit()
         if keys[pygame.K_SPACE] :
             begin_search = True
+            start_time = time.time()
 
         if begin_search:
             if not priority_queue.empty():
@@ -249,9 +255,10 @@ def main():
                     while current_box != start_box:
                         path.append(current_box)
                         current_box = current_box.previous
+                        node_count = node_count+1
                     searching = False
                     start_box.show(window, GREEN)
-                       
+                    end_time = time.time()
 
                 for neighbor in current_box.neighbors:
                         # time.sleep(0.1)
@@ -300,6 +307,18 @@ def main():
                     
                     
                 if not searching:
+                    text_surface1 = font.render("Node count: "+ str(node_count-1), True, YELLOW)
+                    text_surface2 = font.render("Time: "+ "{:.2f}".format(end_time - start_time) + "s", True, YELLOW)
+                    text_rect1 = text_surface1.get_rect()
+                    text_rect2 = text_surface2.get_rect()
+                    # Đặt văn bản bên phải của cửa sổ
+                    text_rect1.left = window_width 
+                    text_rect2.left = window_width 
+                    text_rect1.top = 50
+                    text_rect2.top = 100
+                    window.blit(text_surface1,text_rect1)
+                    window.blit(text_surface2,text_rect2)
+    
                     box.show(window, LIGHT_BLACK) 
                     if box in path:
                         box.show(window, BLUE) 
