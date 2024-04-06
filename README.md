@@ -9,3 +9,5 @@
 # NOTE
  + Chỉnh sửa phần của mình cho giống bài ở Level 1
  + Mới update DFS
+# FOMAT CHUNG CHO VIỆC HIỂN THỊ CÁC CHƯƠNG TRÌNH LEVEL 1, LEVEL 2
+![image](https://github.com/TrietTruong2243/AI-SEARCH/assets/95559644/0fa734bc-d8ef-48f1-99a2-8cd182bb3acc)
