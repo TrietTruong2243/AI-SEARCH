@@ -24,7 +24,7 @@ def draw_menu(window):
     window.blit(title_text, title_rect)
     
     # Vẽ các lựa chọn
-    options = ["DFS", "USC", "A*", "Exit"]
+    options = ["DFS", "UCS", "A*", "Exit"]
     row1 = options[:2]
     row2 = options[2:]
     
@@ -75,8 +75,8 @@ def main_menu():
                             sys.exit()
                     elif 310 <= mouse_pos[1] <= 390:
                         if 150 <= mouse_pos[0] <= 350:
-                            print("USC!")
-                            subprocess.Popen(["python", "USC.py"])
+                            print("UCS!")
+                            subprocess.Popen(["python", "UCS.py"])
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 450 <= mouse_pos[0] <= 650:
