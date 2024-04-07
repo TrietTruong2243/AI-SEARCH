@@ -191,8 +191,9 @@ for i in range(cols):
 
 
 def main():
-   
-    ##################
+    visited_count = 0  # Biến đếm số ô đã visited
+    result = "Target Not Found!"
+
     node_count  =0
     begin_search = False
     target_box = None
@@ -246,15 +247,20 @@ def main():
             if not priority_queue.empty():
                 current_box = priority_queue.get()  
                 current_box.visited = True
-                    # if current_box.x == target_box.x and  current_box.y==target_box.y:
+                visited_count += 1
+
                 if current_box==target_box:
+                    result = "Target Found!"
+
                     while current_box != start_box:
                         path.append(current_box)
                         current_box = current_box.previous
                         node_count = node_count+1
                     searching = False
+                    begin_search = False
                     start_box.show(window, GREEN)
                     end_time = time.time()
+                    
 
                 for neighbor in current_box.neighbors:
                         # time.sleep(0.1)
@@ -303,17 +309,36 @@ def main():
                     
                     
                 if not searching:
-                    text_surface1 = font.render("Node count: "+ str(node_count-1), True, YELLOW)
-                    text_surface2 = font.render("Time: "+ "{:.2f}".format(end_time - start_time) + "s", True, YELLOW)
+                    text_surface1 = font.render("Path length : " + str(len(path)-1), False, YELLOW)
+                    text_surface2 = font.render("Visited box : " + str(visited_count), False, YELLOW)
+                    text_surface3 = font.render("Time: " +"{:.2f}".format(end_time - start_time) + "s", False, YELLOW)
+                    text_surface4 = font.render("Result: " + result, False, YELLOW)
+                    text_surface5 = font.render("Note: When searching, boxes highlighted in green are boxes that have been considered, boxes highlighted in red are boxes that have been added to the priority queue." , False, YELLOW)
+
                     text_rect1 = text_surface1.get_rect()
                     text_rect2 = text_surface2.get_rect()
+                    text_rect3 = text_surface3.get_rect()
+                    text_rect4 = text_surface4.get_rect()
+                    text_rect5 = text_surface5.get_rect()
+
                     # Đặt văn bản bên phải của cửa sổ
-                    text_rect1.left = window_width 
-                    text_rect2.left = window_width 
-                    text_rect1.top = 50
-                    text_rect2.top = 100
+                    text_rect1.left = window_width + 5
+                    text_rect2.left = window_width + 5
+                    text_rect3.left = window_width  + 5
+                    text_rect4.left = window_width  + 5
+                    text_rect5.left = window_width  + 5
+
+                    text_rect1.top = 50 
+                    text_rect2.top = 100 
+                    text_rect3.top = 150 
+                    text_rect4.top = 200 
+                    # text_rect5.top = 250
                     window.blit(text_surface1,text_rect1)
                     window.blit(text_surface2,text_rect2)
+                    window.blit(text_surface3,text_rect3)
+                    window.blit(text_surface4,text_rect4)
+                    # window.blit(text_surface5,text_rect5)
+
     
                     box.show(window, LIGHT_BLACK) 
                     if box in path:
