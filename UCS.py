@@ -251,6 +251,7 @@ def main():
 
                 if current_box==target_box:
                     result = "Target Found!"
+                    end_time = time.time()
 
                     while current_box != start_box:
                         path.append(current_box)
@@ -258,8 +259,8 @@ def main():
                         node_count = node_count+1
                     searching = False
                     begin_search = False
+                    # priority_queue.queue.
                     start_box.show(window, GREEN)
-                    end_time = time.time()
                     
 
                 for neighbor in current_box.neighbors:

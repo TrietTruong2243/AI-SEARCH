@@ -242,17 +242,18 @@ def main():
              if len(stack) > 0 and searching:
                 current_box = stack.pop()
                 current_box.visited = True
-                visited_count += 1
 
                 if current_box == target_box:
-                    result = "Target Found!"
+                    print("Check1")
+                    result = "Target Found !"
                     searching = False
                     end_time = time.time()
-
                     path.append(current_box)
 
                 else:
                     for neighbor in current_box.neighbors:
+                        # time.sleep(0.2)
+
                         if neighbor == target_box:
                             result = "Target Found!"
                             searching = False
@@ -267,6 +268,7 @@ def main():
                             neighbor.queued = True
                             neighbor.previous = current_box
                             stack.append(neighbor)
+                            visited_count += 1
 
         for i in range(cols):
             for j in range(rows):
