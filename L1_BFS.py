@@ -23,6 +23,7 @@ BLUE = (78, 27, 202)
 
 # Thêm trước khi sử dụng font
 pygame.font.init()
+font = pygame.font.SysFont('Inter', 24) # Chọn font và kích thước
 
 # read from txt input.txt
 def read_input():
@@ -134,19 +135,16 @@ class Box:
         pygame.draw.rect(window, color, (self.x * box_width,
                          self.y * box_height, box_width - 2, box_height - 2))
         if self.start == 1:  # Nếu ô là ô bắt đầu, vẽ ký tự 'S' lên ô
-            font = pygame.font.Font(None, 36)  # Chọn font và kích thước
             text = font.render('S', True, LIGHT_BLACK)  # Tạo đối tượng văn bản
             text_rect = text.get_rect(center=(self.x * box_width + box_width // 2, self.y * box_height + box_height // 2))  # Đặt vị trí văn bản ở giữa của ô
             window.blit(text, text_rect)
 
         if self.end == 1:  # Nếu ô là ô kết thúc, vẽ ký tự 'E' lên ô
-            font = pygame.font.Font(None, 36)  # Chọn font và kích thước
             text = font.render('G', True, LIGHT_BLACK)  # Tạo đối tượng văn bản
             text_rect = text.get_rect(center=(self.x * box_width + box_width // 2, self.y * box_height + box_height // 2))  # Đặt vị trí văn bản ở giữa của ô
             window.blit(text, text_rect)
 
         if self.number is not None:  # Nếu ô có số thứ tự
-            font = pygame.font.Font(None, 24)  # Chọn font và kích thước
             text = font.render(str(self.number), True, (255, 255, 255))  # Tạo đối tượng văn bản
             text_rect = text.get_rect(center=(self.x * box_width + box_width // 2, self.y * box_height + box_height // 2))  # Đặt vị trí văn bản ở giữa của ô
             window.blit(text, text_rect)
@@ -293,8 +291,6 @@ def main():
                     
                     
                 if not searching:
-                   
-                    font = pygame.font.Font(None, 24)
                    
                     text_surface1 = font.render("Path length : " + str(len(path)), False, YELLOW)
                     text_surface2 = font.render("Visited box : " + str(visited_count), False, YELLOW)
