@@ -1,6 +1,8 @@
 import pygame
 import sys
 import subprocess
+import pygame.font
+import time
 
 window_width = 800
 window_height = 600
@@ -21,6 +23,7 @@ BLUE = (78, 27, 202)
 
 # Thêm trước khi sử dụng font
 pygame.font.init()
+font = pygame.font.SysFont('Inter', 24) # Chọn font và kích thước
 
 # read from txt input.txt
 def read_input():
@@ -132,19 +135,16 @@ class Box:
         pygame.draw.rect(window, color, (self.x * box_width,
                          self.y * box_height, box_width - 2, box_height - 2))
         if self.start == 1:  # Nếu ô là ô bắt đầu, vẽ ký tự 'S' lên ô
-            font = pygame.font.Font(None, 36)  # Chọn font và kích thước
             text = font.render('S', True, LIGHT_BLACK)  # Tạo đối tượng văn bản
             text_rect = text.get_rect(center=(self.x * box_width + box_width // 2, self.y * box_height + box_height // 2))  # Đặt vị trí văn bản ở giữa của ô
             window.blit(text, text_rect)
 
         if self.end == 1:  # Nếu ô là ô kết thúc, vẽ ký tự 'E' lên ô
-            font = pygame.font.Font(None, 36)  # Chọn font và kích thước
             text = font.render('G', True, LIGHT_BLACK)  # Tạo đối tượng văn bản
             text_rect = text.get_rect(center=(self.x * box_width + box_width // 2, self.y * box_height + box_height // 2))  # Đặt vị trí văn bản ở giữa của ô
             window.blit(text, text_rect)
 
         if self.number is not None:  # Nếu ô có số thứ tự
-            font = pygame.font.Font(None, 24)  # Chọn font và kích thước
             text = font.render(str(self.number), True, (255, 255, 255))  # Tạo đối tượng văn bản
             text_rect = text.get_rect(center=(self.x * box_width + box_width // 2, self.y * box_height + box_height // 2))  # Đặt vị trí văn bản ở giữa của ô
             window.blit(text, text_rect)
@@ -192,6 +192,8 @@ def main():
     begin_search = False
     target_box = None
     searching = True
+    result = "Target Not Found!"
+    visited_count = 0  # Biến đếm số ô đã visited
     # start_box = grid[0][0]
     start_box = None
     target_box = grid[goal["x"]][rows - 1 - goal["y"]]
@@ -236,22 +238,26 @@ def main():
 
         if keys[pygame.K_SPACE] :
             begin_search = True
+            start_time = time.time()
 
         if begin_search:
             if len(queue) > 0 and searching:
                 current_box = queue.pop(0)
                 current_box.visited = True
+                visited_count += 1
 
                 if current_box == target_box:
-                    print("Target Found")
+                    result = "Target Found!"
                     searching = False
+                    end_time = time.time()
                     path.append(current_box)
 
                 else:
                     for neighbor in current_box.neighbors:
                         if neighbor == target_box:
-                            print("Target Found")
+                            result = "Target Found!"
                             searching = False
+                            end_time = time.time()
                             while current_box != start_box:
                                 path.append(current_box)
                                 current_box = current_box.previous
@@ -285,6 +291,32 @@ def main():
                     
                     
                 if not searching:
+                   
+                    text_surface1 = font.render("Path length : " + str(len(path)), False, YELLOW)
+                    text_surface2 = font.render("Visited box : " + str(visited_count), False, YELLOW)
+                    text_surface3 = font.render("Time: " +"{:.2f}".format(end_time - start_time) + "s", False, YELLOW)
+                    text_surface4 = font.render("Result: " + result, False, YELLOW)
+
+                    text_rect1 = text_surface1.get_rect()
+                    text_rect2 = text_surface2.get_rect()
+                    text_rect3 = text_surface3.get_rect()
+                    text_rect4 = text_surface4.get_rect()
+                    # Đặt văn bản bên phải của cửa sổ
+                    text_rect1.left = window_width + 5
+                    text_rect2.left = window_width + 5
+                    text_rect3.left = window_width  + 5
+                    text_rect4.left = window_width  + 5
+
+                    text_rect1.top = 50 
+                    text_rect2.top = 100 
+                    text_rect3.top = 150 
+                    text_rect4.top = 200 
+
+                    window.blit(text_surface1,text_rect1)
+                    window.blit(text_surface2,text_rect2)
+                    window.blit(text_surface3,text_rect3)
+                    window.blit(text_surface4,text_rect4)
+             
                     box.show(window, LIGHT_BLACK) 
                     if box in path:
                         box.show(window, BLUE) 
