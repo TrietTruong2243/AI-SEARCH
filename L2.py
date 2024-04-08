@@ -76,7 +76,7 @@ def main_menu():
                             sys.exit()
                     
                     elif 474 <= mouse_pos[1] <= 539:
-                        if 198 <= mouse_pos[0] <= 3376:
+                        if 198 <= mouse_pos[0] <= 376:
                             print("UCS!")
                             subprocess.Popen(["python", "UCS.py"])
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
@@ -84,7 +84,7 @@ def main_menu():
                         elif 647 <= mouse_pos[0] <= 823:
                             # Nút "Quay lại" được nhấp
                             print("Exit!")
-                            subprocess.Popen(["python", "menu.py"])  # Chạy level1.py
+                            subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
         

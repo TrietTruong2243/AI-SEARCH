@@ -4,8 +4,11 @@ import subprocess
 import pygame.font
 import time
 
-window_width = 800
-window_height = 600
+window_width = 1024 -200
+window_height = 768
+
+
+window = pygame.display.set_mode((window_width + 200, window_height))
 
 
 window = pygame.display.set_mode((window_width + 200, window_height))
@@ -188,6 +191,10 @@ for i in range(cols):
 
 
 def main():
+    # Load background image
+    background_image = pygame.image.load("frameGame.png")
+    window.blit(background_image, (0, 0))
+    
     visited_count = 0  # Biến đếm số ô đã visited
 
     begin_search = False
@@ -294,25 +301,25 @@ def main():
                     
                 if not searching:
                    
-                    text_surface1 = font.render("Path length : " + str(len(path)), False, YELLOW)
-                    text_surface2 = font.render("Visited box : " + str(visited_count), False, YELLOW)
-                    text_surface3 = font.render("Time: " +"{:.2f}".format(end_time - start_time) + "s", False, YELLOW)
-                    text_surface4 = font.render("Result: " + result, False, YELLOW)
+                    text_surface1 = font.render("Path length : " + str(len(path)), False, LIGHT_BLACK)
+                    text_surface2 = font.render("Visited box : " + str(visited_count), False, LIGHT_BLACK)
+                    text_surface3 = font.render("Time: " +"{:.2f}".format(end_time - start_time) + "s", False, LIGHT_BLACK)
+                    text_surface4 = font.render("Result: " + result, False, RED)
 
                     text_rect1 = text_surface1.get_rect()
                     text_rect2 = text_surface2.get_rect()
                     text_rect3 = text_surface3.get_rect()
                     text_rect4 = text_surface4.get_rect()
                     # Đặt văn bản bên phải của cửa sổ
-                    text_rect1.left = window_width + 5
-                    text_rect2.left = window_width + 5
-                    text_rect3.left = window_width  + 5
-                    text_rect4.left = window_width  + 5
+                    text_rect1.left = window_width + 8
+                    text_rect2.left = window_width + 8
+                    text_rect3.left = window_width  + 8
+                    text_rect4.left = window_width  + 8
 
-                    text_rect1.top = 50 
-                    text_rect2.top = 100 
-                    text_rect3.top = 150 
-                    text_rect4.top = 200 
+                    text_rect1.top = 150 
+                    text_rect2.top = 200 
+                    text_rect3.top = 250 
+                    text_rect4.top = 300  
 
                     window.blit(text_surface1,text_rect1)
                     window.blit(text_surface2,text_rect2)
