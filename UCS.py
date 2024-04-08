@@ -27,7 +27,7 @@ font = pygame.font.SysFont('Inter', 24) # Chọn font và kích thước
 # read from txt input.txt
 def read_input():
     
-    with open('input.txt', 'r') as f:
+    with open('input2.txt', 'r') as f:
         # read the size of the board
         lines = f.readlines()
         

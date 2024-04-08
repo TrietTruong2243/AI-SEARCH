@@ -29,7 +29,7 @@ font = pygame.font.SysFont('Inter', 24) # Chọn font và kích thước
 # read from txt input.txt
 def read_input():
     
-    with open('input.txt', 'r') as f:
+    with open('input2.txt', 'r') as f:
         # read the size of the board
         lines = f.readlines()
         
@@ -172,7 +172,8 @@ class Box:
         if self.y > 0:
             self.neighbors.append(grid[self.x][self.y - 1])
     def setHeuristic(self, target_box):
-        self.heuristic = sqrt((self.x - target_box.x)**2 + (self.y - target_box.y)**2)
+        self.heuristic = abs(self.x - target_box.x) + abs(self.y-target_box.y) #eucildian
+        # self.heuristic = sqrt((self.x - target_box.x)**2 + (self.y - target_box.y)**2) #mahhatan
 
     def __lt__(self, other):
         if (self.goal + self.heuristic) == (other.goal + other.heuristic):
