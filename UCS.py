@@ -97,9 +97,6 @@ path = []
 
 # Tìm các điểm nằm trên đa giác
 points_on_obstacles = points_on_polygon(obstacles)
-
-
-# Shortest Path using BFS algorithm
 class Box:
     def __init__(self, x, y):
         self.x = x
@@ -259,12 +256,10 @@ def main():
                         node_count = node_count+1
                     searching = False
                     begin_search = False
-                    # priority_queue.queue.
                     start_box.show(window, GREEN)
                     
 
                 for neighbor in current_box.neighbors:
-                        # time.sleep(0.1)
 
                             
                     if not neighbor.obstacle and not neighbor.visited:
