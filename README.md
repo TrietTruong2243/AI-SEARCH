@@ -8,6 +8,7 @@
 
 # NOTE
  + Đã update giao diện
+ + Đổi format screen 1024 X 768
  + Chỉnh sửa phần của mình cho giống bài ở Level 1
  + Mới update DFS
  + Bỏ file Main.py
