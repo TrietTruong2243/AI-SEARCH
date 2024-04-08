@@ -10,18 +10,17 @@ BLUE = (64, 164, 223)
 RED = (255, 0, 0)
 
 # Kích thước cửa sổ
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 1024
+WINDOW_HEIGHT = 768
 
 def draw_menu(window):
-    window.fill(GRAY)
-    font_title = pygame.font.SysFont('comicsansms', 70)
-    font_option = pygame.font.SysFont('Courier New', 40)
+    # Load background image
+    background_image = pygame.image.load("Desktop_Level 2.png")
+    window.blit(background_image, (0, 0))
     
-    # Vẽ tiêu đề
-    title_text = font_title.render("ALGORITHM", True, BLACK)
-    title_rect = title_text.get_rect(center=(WINDOW_WIDTH // 2, 100))
-    window.blit(title_text, title_rect)
+
+    font_option = pygame.font.SysFont('Courier New', 40)
+      
     
     # Vẽ các lựa chọn
     options = ["DFS", "UCS", "A*", "Exit"]
@@ -33,15 +32,15 @@ def draw_menu(window):
         if option == "Exit":
             text_color = RED
         text = font_option.render(option, True, text_color)
-        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2 - 100, 250 + i * 80))
+        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2 - 230, 378 + i * 132))
         window.blit(text, text_rect)
     
     for i, option in enumerate(row2):
         text_color = BLACK
         if option == "Exit":
-            text_color = RED
+            text_color = WHITE
         text = font_option.render(option, True, text_color)
-        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2 + 100, 250 + i * 80))
+        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2 + 230, 378 + i * 132))
         window.blit(text, text_rect)
     
     pygame.display.flip()
@@ -62,24 +61,27 @@ def main_menu():
                 if event.button == 1:
                     # Kiểm tra nút được nhấp
                     mouse_pos = pygame.mouse.get_pos()
-                    if 210 <= mouse_pos[1] <= 290:
-                        if 150 <= mouse_pos[0] <= 350:
+                    print(mouse_pos)
+                    
+                    if 338 <= mouse_pos[1] <= 412:
+                        if 198 <= mouse_pos[0] <= 376:
                             print("DFS!")
                             subprocess.Popen(["python", "DFS.py"]) 
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
-                        elif 450 <= mouse_pos[0] <= 650:
+                        elif 647 <= mouse_pos[0] <= 823:
                             print("A*!")
                             subprocess.Popen(["python", "A.py"])
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
-                    elif 310 <= mouse_pos[1] <= 390:
-                        if 150 <= mouse_pos[0] <= 350:
+                    
+                    elif 474 <= mouse_pos[1] <= 539:
+                        if 198 <= mouse_pos[0] <= 3376:
                             print("UCS!")
                             subprocess.Popen(["python", "UCS.py"])
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
-                        elif 450 <= mouse_pos[0] <= 650:
+                        elif 647 <= mouse_pos[0] <= 823:
                             # Nút "Quay lại" được nhấp
                             print("Exit!")
                             subprocess.Popen(["python", "menu.py"])  # Chạy level1.py

@@ -4,10 +4,10 @@ import subprocess
 import queue
 import math
 
-window_width = 800
-window_height = 600
+window_width = 1024 - 200
+window_height = 768
 
-window = pygame.display.set_mode((window_width, window_height))
+window = pygame.display.set_mode((window_width + 200, window_height))
 
 # Màu sắc
 LIGHT_BLACK = (50, 50, 50)
@@ -248,6 +248,10 @@ def find_shortest_path(start_point, end_point):
 
 
 def main():
+    # Load background image
+    background_image = pygame.image.load("frameGame.png")
+    window.blit(background_image, (0, 0))
+    
     path = []
     target_box = grid[goal["x"]][rows - 1 - goal["y"]]
     target_box.setBaseEnd()
