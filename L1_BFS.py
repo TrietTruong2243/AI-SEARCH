@@ -188,6 +188,8 @@ for i in range(cols):
 
 def main():
     # Load background image
+    temp = 0
+    start_time =0 
     background_image = pygame.image.load("frameGame.png")
     window.blit(background_image, (0, 0))
 
@@ -238,9 +240,10 @@ def main():
     
 
 
-        if keys[pygame.K_SPACE] :
-            begin_search = True
-            start_time = time.time()
+        if  start_time ==0: 
+            if keys[pygame.K_SPACE ] and (temp < 1)  :
+                begin_search = True
+                start_time = time.time()
 
         if begin_search:
             if len(queue) > 0 and searching:
@@ -251,6 +254,8 @@ def main():
                 if current_box == target_box:
                     result = "Target Found!"
                     searching = False
+                    temp = temp +1
+
                     end_time = time.time()
                     path.append(current_box)
 
@@ -259,6 +264,8 @@ def main():
                         if neighbor == target_box:
                             result = "Target Found!"
                             searching = False
+                            temp = temp +1
+
                             end_time = time.time()
                             while current_box != start_box:
                                 path.append(current_box)
@@ -291,7 +298,29 @@ def main():
                 if box in path:
                     box.show(window, BLUE)  
                     
-                    
+                if (len(queue) == 0 and searching == True):
+                    text_surface = font.render("Result: ", False, RED)
+                    text_rect = text_surface.get_rect()
+                    # Đặt văn bản bên phải của cửa sổ
+                    text_rect.left = window_width  + 8
+                    text_rect.top = 200
+                    window.blit(text_surface,text_rect)
+                    text_surface1 = font.render(result, False, RED)
+                    text_rect1 = text_surface1.get_rect()
+                    # Đặt văn bản bên phải của cửa sổ
+                    text_rect1.left = window_width  + 8
+                    text_rect1.top = 250 
+                    window.blit(text_surface1,text_rect1)
+                    box.show(window, LIGHT_BLACK) 
+                    if box in path:
+                        box.show(window, BLUE) 
+                    if box.queued:
+                        if box == start_box:
+                            box.show(window, GREEN) 
+                    if box.obstacle == 1:
+                        box.show(window, LIGHT_GRAY)  
+                    if box.end == 1:
+                        box.show(window, LIGHT_WHITE)      
                 if not searching:
                    
                     text_surface1 = font.render("Path length : " + str(len(path)), False, LIGHT_BLACK)
