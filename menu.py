@@ -18,8 +18,6 @@ def draw_menu(window):
     background_image = pygame.image.load("background.png")
     window.blit(background_image, (0, 0))
 
-
-
     font_option = pygame.font.SysFont('Courier New', 40)
     # Vẽ các lựa chọn
     options = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Quit"]

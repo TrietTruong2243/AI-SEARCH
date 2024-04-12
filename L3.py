@@ -3,6 +3,8 @@ import sys
 import subprocess
 import queue
 import math
+import time
+from itertools import permutations
 
 window_width = 1024 - 200
 window_height = 768
@@ -25,7 +27,7 @@ font = pygame.font.SysFont('Inter', 24)
 
 # Đọc dữ liệu từ tệp tin input.txt
 def read_input():
-    with open('input_lv3.txt', 'r') as f:
+    with open('input2.txt', 'r') as f:
         lines = f.readlines()
         
         size = {"x": int(lines[0].split(',')[0]), "y": int(lines[0].split(',')[1])}
@@ -39,9 +41,9 @@ def read_input():
             obstacle_coords = [{"x": int(obstacle_line[j]), "y": int(obstacle_line[j+1])} for j in range(0, len(obstacle_line), 2)]
             obstacles.append(obstacle_coords)
         pick_up_points = []
-        pick_up_line = lines[3 + num_obstacles].strip().split(',')
-        for j in range(0, len(pick_up_line), 2):
-            pick_up_points.append({"x": int(pick_up_line[j]), "y": int(pick_up_line[j+1])})
+        pick_up_line = lines[1].strip().split(',')
+        for j in range(4, len(pick_up_line), 2):
+            pick_up_points.append({"x": int(pick_up_line[j]), "y": int(pick_up_line[j+1]),"distance":0})
     return size, start, goal, num_obstacles, obstacles, pick_up_points
 
 # Tính khoảng cách Euclid giữa hai ô
@@ -208,7 +210,7 @@ def find_shortest_path(start_point, end_point):
     path = []
     start_box = grid[start_point["x"]][rows - 1 - start_point["y"]]
     end_box = grid[end_point["x"]][rows - 1 - end_point["y"]]
-
+    check = False
     start_box.setStart()
     end_box.setEnd()
 
@@ -221,44 +223,156 @@ def find_shortest_path(start_point, end_point):
 
     while not open_set.empty():
         current_box = open_set.get()[1]
-
+        current_box.visited = True
         if current_box == end_box:  # Nếu đã đến được điểm cuối, thoát vòng lặp
+            check = True
             break
+        else:
+            for neighbor in current_box.neighbors:
+                neighbor.queued = True
+                if neighbor.obstacle == 1:  # Nếu ô láng giềng là vật cản, bỏ qua
+                    continue
+                else:
+                    temp_g_score = g_score[current_box] + 1  # Ước lượng chi phí từ điểm bắt đầu đến ô láng giềng là 1
+                    if temp_g_score < g_score[neighbor]:
+                        came_from[neighbor] = current_box
+                        g_score[neighbor] = temp_g_score
+                        priority = temp_g_score + euclidean_distance(neighbor, end_box)  # Ưu tiên = chi phí thực tế + ước lượng chi phí từ điểm hiện tại đến điểm cuối
+                        open_set.put((priority, neighbor))
+        
+        ##################################################################
+        
+        # for i in range(cols-1):
+        #     for j in range(rows-1):
+        #         # Get the box at the current position in the grid array and store it in the box variable
+        #         check1 = i+1
+        #         box = grid[check1][j]
+        #         box.show(window, LIGHT_BLACK)
+        #         # if box in path:
+        #         #     box.show(window, BLUE)
 
-        for neighbor in current_box.neighbors:
-            if neighbor.obstacle == 1:  # Nếu ô láng giềng là vật cản, bỏ qua
-                continue
+        #         if box.baseStart == 1:
+        #             box.show(window, GREEN)  
+        #         if box.obstacle == 1:
+        #             box.show(window, LIGHT_GRAY)  
 
-            temp_g_score = g_score[current_box] + 1  # Ước lượng chi phí từ điểm bắt đầu đến ô láng giềng là 1
-
-            if temp_g_score < g_score[neighbor]:
-                came_from[neighbor] = current_box
-                g_score[neighbor] = temp_g_score
-                priority = temp_g_score + euclidean_distance(neighbor, end_box)  # Ưu tiên = chi phí thực tế + ước lượng chi phí từ điểm hiện tại đến điểm cuối
-                open_set.put((priority, neighbor))
-
+        #         if box.baseEnd == 1:
+        #             box.show(window, LIGHT_WHITE) 
+        #         if box.queued:
+        #             if box == start_box:
+        #                 box.show(window, YELLOW) 
+        #             else:
+        #                 box.show(window, RED) 
+        #         if box.visited:
+        #             box.show(window, GREEN)  
+                
+        #         if box.pick_up_point == 1:
+        #             box.show(window, YELLOW)
+        #         if box.obstacle == 1:
+        #             box.show(window, LIGHT_GRAY)
+        # pygame.display.flip()
+    ##################################################################
+    
     # Xác định đường đi bằng cách lùi lại từ điểm cuối
     current_box = end_box
-    while current_box in came_from:
-        path.insert(0, current_box)
-        current_box = came_from[current_box]
-    path.insert(0, start_box)
-    return path
 
+    if (check ==True):
+        while current_box in came_from:
+            path.insert(0, current_box)
+            current_box = came_from[current_box]
+        # path.insert(0, start_box)
+    for i in range(cols-1):
+            for j in range(rows-1):
+                # Get the box at the current position in the grid array and store it in the box variable
+                check1 = i+1
+                box = grid[check1][j]
+                box.queued = False
+                box.visited = False
+    pygame.display.flip()
+    return path,check
+def getAllPath( start, target, pickUpPoints):
+    allPath = [['inf'] * len(pickUpPoints) for i in range(len(pickUpPoints))] 
+    startPath = [['inf'] for i in range(len(pickUpPoints)) ]
+    targetPath = [['inf']  for i in range(len(pickUpPoints))  ]
+    
+    for i in range(len(pickUpPoints)):
+        startPath[i] = find_shortest_path(start, pickUpPoints[i])[0]
+        targetPath[i] = find_shortest_path(pickUpPoints[i], target)[0]
+        
+    for m in range(len(pickUpPoints)):
+        for n in range(len(pickUpPoints)):
+            allPath[m][n] = find_shortest_path(pickUpPoints[m], pickUpPoints[n])[0]
+    return (startPath,targetPath,allPath)
+def findShortestPath( start, target, pickUpPoints):
+    startPath, targetPath, allPath = getAllPath(start,target,pickUpPoints)
+    shortest_length = float('inf')
+    shortest_path = []
+    for permutation in permutations(range(len(pickUpPoints))):
+        path = []        
+        path =path+ startPath[permutation[0]]
+        for i in range(len(pickUpPoints) - 1):
+            path = path + allPath[permutation[i]][permutation[i + 1]]
+        path = path + targetPath[permutation[len(pickUpPoints) - 1]]
+        length = len(path)
+        if(length < shortest_length):
+            shortest_length = length
+            shortest_path = path
+        for i in range(cols-1):
+            for j in range(rows-1):
+                # Get the box at the current position in the grid array and store it in the box variable
+                check1 = i+1
+                box = grid[check1][j]
+                box.show(window, LIGHT_BLACK)
+                if box in path:
+                    box.show(window, BLUE)
 
+                if box.baseStart == 1:
+                    box.show(window, GREEN)  
+                if box.obstacle == 1:
+                    box.show(window, LIGHT_GRAY)  
+                if box.baseEnd == 1:
+                    box.show(window, LIGHT_WHITE) 
+                if box.pick_up_point == 1:
+                    box.show(window, YELLOW)
+                if box.obstacle == 1:
+                    box.show(window, LIGHT_GRAY)
+        pygame.display.flip()
+        path = []
+    return shortest_path
+
+def updatePickUpPoints(pick_up_points1, start_box):
+    updatePoints = []
+    unvaiablePoint = 0
+    temp = []
+    for i in pick_up_points1:
+        temp.append(i)
+    first = start_box
+    for i in temp:
+        tempt = find_shortest_path(first,i)
+        i["distance"] = tempt[1]
+           
+    for i in temp[:]:
+        if (i["distance"]==False):
+            unvaiablePoint = unvaiablePoint+1
+        else:
+            updatePoints.append(i)    
+    return updatePoints,unvaiablePoint
 
 def main():
     # Load background image
+    checkDone = False
     background_image = pygame.image.load("frameGame.png")
     window.blit(background_image, (0, 0))
-    
+    checkRun = -1
     path = []
+    updatePoints1 = pick_up_points
     target_box = grid[goal["x"]][rows - 1 - goal["y"]]
     target_box.setBaseEnd()
-
+    
     start_box = grid[start["x"]][rows - 1 -start["y"]]
     start_box.setBaseStart()
-
+    # updatePickUpPoints(pick_up_points,start)
+  
     # set obstacles
     for i, points in enumerate(points_on_obstacles):
         for point in points:
@@ -267,15 +381,9 @@ def main():
     # set pick up points
     for pick_up_point in pick_up_points:
         grid[pick_up_point["x"]][rows - 1 - pick_up_point["y"]].setPickUpPoint()
+    #test- get out
     
-    pick_up_points.append(goal)
-    pick_up_points.insert(0, start)
-    # Chạy thuật toán tìm đường đi ngắn nhất cho mỗi cặp điểm đón và điểm cuối
-    for i in range(len(pick_up_points) - 1):
-        start_point = pick_up_points[i]
-        end_point = pick_up_points[i + 1]
-        path += find_shortest_path(start_point, end_point)
-
+   
     # Vẽ lưới và đường đi
     while True:
         for event in pygame.event.get():
@@ -289,18 +397,132 @@ def main():
                     subprocess.Popen(["python", "menu.py"])  # Gọi hàm để quay lại menu
                     pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                     sys.exit()
+                    
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
         if keys[pygame.K_SPACE]:
-            break
-        
+            if (checkRun==-1): 
+                checkRun = checkRun+1
+                text_surface4 = font.render("On search..." , False, RED)
+                text_rect4 = text_surface4.get_rect()          
+                text_rect4.left = window_width  + 8              
+                text_rect4.top = 100 
+                window.blit(text_surface4,text_rect4)
+                pygame.display.flip()  
+
+                start_time = time.time()
+                updatePoints1, unavailblePoint = updatePickUpPoints(pick_up_points,start)
+                checkRun = checkRun+1
+                print("Start")
+                if (find_shortest_path(start,goal)[1]==False):
+                    result = "Target Not Found!"
+                    checkDone = True
+
+                elif len(updatePoints1)==0:
+                    path = find_shortest_path(start,goal)[0]
+                    result = "Target Found!"
+                    checkDone = True
+
+
+                else:
+                    print("check")
+                    path = findShortestPath(start,goal,updatePoints1)
+                    result = "Target Found!"
+                    checkDone = True
+
+                end_time = time.time()
+       
         for i in range(cols):
             for j in range(rows):
                 # Get the box at the current position in the grid array and store it in the box variable
                 box = grid[i][j]
+                if (checkDone == True):
+                    if (result =="Target Found!"):
+                        if unavailblePoint ==0:
+                            text_surface1 = font.render("Path length : " + str(len(path)), False, LIGHT_BLACK)
+                            text_surface2 = font.render("Points not passed: " + str(unavailblePoint), False, LIGHT_BLACK)
+                            text_surface3 = font.render("Time: " +"{:.2f}".format(end_time - start_time) + "s", False, LIGHT_BLACK)
+                            text_surface4 = font.render("Result:" + result, False, RED)
+
+                            text_rect1 = text_surface1.get_rect()
+                            text_rect2 = text_surface2.get_rect()
+                            text_rect3 = text_surface3.get_rect()
+                            text_rect4 = text_surface4.get_rect()
+                                # Đặt văn bản bên phải của cửa sổ
+                            text_rect1.left = window_width + 8
+                            text_rect2.left = window_width + 8
+                            text_rect3.left = window_width  + 8
+                            text_rect4.left = window_width  + 8
+
+                            text_rect1.top = 150 
+                            text_rect2.top = 200 
+                            text_rect3.top = 250 
+                            text_rect4.top = 300 
+
+                            window.blit(text_surface1,text_rect1)
+                            window.blit(text_surface2,text_rect2)
+                            window.blit(text_surface3,text_rect3)
+                            window.blit(text_surface4,text_rect4)
+                            
+                        else:
+                            text_surface1 = font.render("Path length : " + str(len(path)), False, LIGHT_BLACK)
+                            text_surface2 = font.render("Points not passed: " + str(unavailblePoint), False, LIGHT_BLACK)
+                            text_surface3 = font.render("Time: " +"{:.2f}".format(end_time - start_time) + "s", False, LIGHT_BLACK)
+                            text_surface4 = font.render("Result:", False, RED)
+                            text_surface5 = font.render("Target found with some", False, RED)
+                            text_surface6 = font.render("points not passed!", False, RED)
+
+                            text_rect1 = text_surface1.get_rect()
+                            text_rect2 = text_surface2.get_rect()
+                            text_rect3 = text_surface3.get_rect()
+                            text_rect4 = text_surface4.get_rect()
+                            text_rect5 = text_surface5.get_rect()
+                            text_rect6 = text_surface6.get_rect()
+
+                                # Đặt văn bản bên phải của cửa sổ
+                            text_rect1.left = window_width + 8
+                            text_rect2.left = window_width + 8
+                            text_rect3.left = window_width  + 8
+                            text_rect4.left = window_width  + 8
+                            text_rect5.left = window_width  + 8
+                            text_rect6.left = window_width  + 8
+
+                            text_rect1.top = 150 
+                            text_rect2.top = 200 
+                            text_rect3.top = 250 
+                            text_rect4.top = 300 
+                            text_rect5.top = 350 
+                            text_rect6.top = 400 
+
+                            window.blit(text_surface1,text_rect1)
+                            window.blit(text_surface2,text_rect2)
+                            window.blit(text_surface3,text_rect3)
+                            window.blit(text_surface4,text_rect4)
+                            window.blit(text_surface5,text_rect5)
+                            window.blit(text_surface6,text_rect6)
+                    else:
+                            text_surface4 = font.render("Result:" , False, RED)
+                            text_surface5 = font.render( result, False, RED)
+
+                            
+                            text_rect4 = text_surface4.get_rect()
+                            text_rect5 = text_surface5.get_rect()
+                           
+                            text_rect4.left = window_width  + 8
+                            text_rect5.left = window_width  + 8
+
+                            
+                            text_rect4.top = 250 
+                            text_rect5.top = 300 
+
+                            
+                            window.blit(text_surface4,text_rect4)
+                            window.blit(text_surface5,text_rect5)
+
+                            path = []
                 box.show(window, LIGHT_BLACK)
                 if box in path:
                     box.show(window, BLUE)
