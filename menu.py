@@ -1,6 +1,7 @@
 import pygame
 import sys
 import subprocess
+import sys
 
 # Các màu sắc
 BLACK = (0, 0, 0)
@@ -62,12 +63,12 @@ def main():
                     if 335 <= mouse_pos[1] <= 410:
                         if 90 <= mouse_pos[0] <= 270:  # Check first row
                             print("Level 1!")
-                            subprocess.Popen(["python", "L1_BFS.py"])  # Chạy L1.py
+                            subprocess.Popen(["python", "chooseMap.py", "L1_BFS.py"])  # Chạy L1.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 395 <= mouse_pos[0] <= 570:  # Second option
                             print("Level 3!")
-                            subprocess.Popen(["python", "L3.py"])  # Chạy L3.py
+                            subprocess.Popen(["python", "chooseMap.py","L3.py"])  # Chạy L3.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
 

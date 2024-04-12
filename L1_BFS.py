@@ -23,11 +23,11 @@ BLUE = (78, 27, 202)
 # Thêm trước khi sử dụng font
 pygame.font.init()
 font = pygame.font.SysFont('Inter', 26) # Chọn font và kích thước
-
+filename = sys.argv[1]
 # read from txt input.txt
 def read_input():
     
-    with open('input.txt', 'r') as f:
+    with open(filename, 'r') as f:
         # read the size of the board
         lines = f.readlines()
         

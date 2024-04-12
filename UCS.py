@@ -17,6 +17,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 BLUE = (78, 27, 202)
+filename = sys.argv[1]
 
 
 # Thêm trước khi sử dụng font
@@ -26,7 +27,7 @@ font = pygame.font.SysFont('Inter', 24) # Chọn font và kích thước
 # read from txt input.txt
 def read_input():
     
-    with open('input2.txt', 'r') as f:
+    with open(filename, 'r') as f:
         # read the size of the board
         lines = f.readlines()
         

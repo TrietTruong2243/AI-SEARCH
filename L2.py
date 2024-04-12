@@ -66,19 +66,19 @@ def main_menu():
                     if 338 <= mouse_pos[1] <= 412:
                         if 198 <= mouse_pos[0] <= 376:
                             print("DFS!")
-                            subprocess.Popen(["python", "DFS.py"]) 
+                            subprocess.Popen(["python", "chooseMap.py","DFS.py"]) 
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 647 <= mouse_pos[0] <= 823:
                             print("A*!")
-                            subprocess.Popen(["python", "A.py"])
+                            subprocess.Popen(["python","chooseMap.py", "A.py"])
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                     
                     elif 474 <= mouse_pos[1] <= 539:
                         if 198 <= mouse_pos[0] <= 376:
                             print("UCS!")
-                            subprocess.Popen(["python", "UCS.py"])
+                            subprocess.Popen(["python", "chooseMap.py","UCS.py"])
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 647 <= mouse_pos[0] <= 823:

@@ -20,6 +20,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 BLUE = (78, 27, 202)
+filename = sys.argv[1]
 
 # Font
 pygame.font.init()
@@ -27,7 +28,7 @@ font = pygame.font.SysFont('Inter', 24)
 
 # Đọc dữ liệu từ tệp tin input.txt
 def read_input():
-    with open('input2.txt', 'r') as f:
+    with open(filename, 'r') as f:
         lines = f.readlines()
         
         size = {"x": int(lines[0].split(',')[0]), "y": int(lines[0].split(',')[1])}
@@ -240,40 +241,6 @@ def find_shortest_path(start_point, end_point):
                         priority = temp_g_score + euclidean_distance(neighbor, end_box)  # Ưu tiên = chi phí thực tế + ước lượng chi phí từ điểm hiện tại đến điểm cuối
                         open_set.put((priority, neighbor))
         
-        ##################################################################
-        
-        # for i in range(cols-1):
-        #     for j in range(rows-1):
-        #         # Get the box at the current position in the grid array and store it in the box variable
-        #         check1 = i+1
-        #         box = grid[check1][j]
-        #         box.show(window, LIGHT_BLACK)
-        #         # if box in path:
-        #         #     box.show(window, BLUE)
-
-        #         if box.baseStart == 1:
-        #             box.show(window, GREEN)  
-        #         if box.obstacle == 1:
-        #             box.show(window, LIGHT_GRAY)  
-
-        #         if box.baseEnd == 1:
-        #             box.show(window, LIGHT_WHITE) 
-        #         if box.queued:
-        #             if box == start_box:
-        #                 box.show(window, YELLOW) 
-        #             else:
-        #                 box.show(window, RED) 
-        #         if box.visited:
-        #             box.show(window, GREEN)  
-                
-        #         if box.pick_up_point == 1:
-        #             box.show(window, YELLOW)
-        #         if box.obstacle == 1:
-        #             box.show(window, LIGHT_GRAY)
-        # pygame.display.flip()
-    ##################################################################
-    
-    # Xác định đường đi bằng cách lùi lại từ điểm cuối
     current_box = end_box
 
     if (check ==True):
