@@ -11,7 +11,7 @@ RED = (255, 0, 0)
 
 # Kích thước cửa sổ
 WINDOW_WIDTH = 1024
-WINDOW_HEIGHT = 768
+WINDOW_HEIGHT = 700
 
 def draw_menu(window):
     # Load background image

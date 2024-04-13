@@ -47,7 +47,12 @@ def draw_menu(window):
         text = font_option.render(option, True, text_color)
         text_rect = text.get_rect(center=(WINDOW_WIDTH // 2 + 230, 378 + i * 132))
         window.blit(text, text_rect)
-    
+
+    font_option = pygame.font.SysFont('Courier New', 25)
+    text = font_option.render("No Padding", True, BLACK)
+    text_rect = text.get_rect(center=(515,  613))
+    window.blit(text, text_rect)
+
     pygame.display.flip()
 
 def main_menu():
@@ -92,6 +97,14 @@ def main_menu():
                             subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
+
+                    elif 575 <= mouse_pos[1] <= 647:
+                         if 424 <= mouse_pos[0] <= 601 :
+                            print("No Padding!")
+                            subprocess.Popen(["python", file,"no_padding.txt"])
+                            pygame.quit()
+                            sys.exit()
+                         
         
         draw_menu(window)
         clock.tick(60)

@@ -6,7 +6,7 @@ import time
 import subprocess
 
 window_width = 1024 - 200
-window_height = 768
+window_height = 700
 
 window = pygame.display.set_mode((window_width + 200, window_height))
 
