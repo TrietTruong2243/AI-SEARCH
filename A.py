@@ -18,6 +18,10 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 BLUE = (78, 27, 202)
+if len(sys.argv) <2:
+    subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
+    pygame.quit()  # Thoát khỏi cửa sổ hiện tại
+    sys.exit()
 filename = sys.argv[1]
 
 

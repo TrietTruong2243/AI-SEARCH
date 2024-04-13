@@ -3,6 +3,7 @@ import sys
 import subprocess
 import pygame.font
 import time
+import subprocess
 
 window_width = 1024 - 200
 window_height = 768
@@ -19,10 +20,15 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 BLUE = (78, 27, 202)
 
-
+def exists(var):
+    return var in globals() or var in locals()
 # Thêm trước khi sử dụng font
 pygame.font.init()
 font = pygame.font.SysFont('Inter', 26) # Chọn font và kích thước
+if len(sys.argv) <2:
+    subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
+    pygame.quit()  # Thoát khỏi cửa sổ hiện tại
+    sys.exit()
 filename = sys.argv[1]
 # read from txt input.txt
 def read_input():

@@ -13,6 +13,10 @@ RED = (255, 0, 0)
 # Kích thước cửa sổ
 WINDOW_WIDTH = 1024
 WINDOW_HEIGHT = 768
+if len(sys.argv) <2:
+    subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
+    pygame.quit()  # Thoát khỏi cửa sổ hiện tại
+    sys.exit()
 file = sys.argv[1]
 def draw_menu(window):
     # Load background image
