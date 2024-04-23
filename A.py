@@ -103,8 +103,6 @@ path = []
 # Tìm các điểm nằm trên đa giác
 points_on_obstacles = points_on_polygon(obstacles)
 
-
-# Shortest Path using BFS algorithm
 class Box:
     def __init__(self, x, y):
         self.x = x
@@ -336,7 +334,7 @@ def main():
                     if box.end == 1:
                         box.show(window, LIGHT_WHITE)      
                 if not searching:
-                    text_surface1 = font.render("Path length : " + str(len(path)-1), False, LIGHT_BLACK)
+                    text_surface1 = font.render("Path length : " + str(len(path)), False, LIGHT_BLACK)
                     text_surface2 = font.render("Visited box : " + str(visited_count), False, LIGHT_BLACK)
                     text_surface3 = font.render("Time: " +"{:.2f}".format(end_time - start_time) + "s", False, LIGHT_BLACK)
                     text_surface4 = font.render("Result: " + result, False, RED)

@@ -107,7 +107,6 @@ path = []
 points_on_obstacles = points_on_polygon(obstacles)
 
 
-# Shortest Path using BFS algorithm
 class Box:
     def __init__(self, x, y):
         self.x = x

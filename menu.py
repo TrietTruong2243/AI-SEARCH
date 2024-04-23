@@ -85,7 +85,7 @@ def main():
                             sys.exit()
                         elif 395 <= mouse_pos[0] <= 575:  # Second option
                             print("Level 4!")
-                            subprocess.Popen(["python", "L4.py"])  # Chạy L4.py
+                            subprocess.Popen(["python", "chooseMap.py", "chooseSpeed.py"])  # Chạy L4.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 700 <= mouse_pos[0] <= 800:  # Check second row
