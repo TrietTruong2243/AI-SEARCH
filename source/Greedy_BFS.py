@@ -25,12 +25,12 @@ def exists(var):
 # Thêm trước khi sử dụng font
 pygame.font.init()
 font = pygame.font.SysFont('Inter', 26) # Chọn font và kích thước
-# if len(sys.argv) <2:
-#     subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
-#     pygame.quit()  # Thoát khỏi cửa sổ hiện tại
-#     sys.exit()
-# filename = sys.argv[1]
-filename = "input3.txt"
+if len(sys.argv) <2:
+    subprocess.Popen(["python", "./menu.py"])  # Quay về menu.py
+    pygame.quit()  # Thoát khỏi cửa sổ hiện tại
+    sys.exit()
+filename = sys.argv[1]
+# filename = "input3.txt"
 # read from txt input.txt
 def read_input():
     

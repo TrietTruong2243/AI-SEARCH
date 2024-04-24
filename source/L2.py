@@ -23,7 +23,7 @@ def draw_menu(window):
       
     
     # Vẽ các lựa chọn
-    options = ["DFS", "UCS", "A*", "Exit"]
+    options = ["G_BFS", "UCS", "A*", "Exit"]
     row1 = options[:2]
     row2 = options[2:]
     
@@ -65,8 +65,7 @@ def main_menu():
                     
                     if 338 <= mouse_pos[1] <= 412:
                         if 198 <= mouse_pos[0] <= 376:
-                            print("DFS!")
-                            subprocess.Popen(["python", "./source/chooseMap.py","./source/DFS.py"]) 
+                            subprocess.Popen(["python", "./source/chooseMap.py","./source/Greedy_BFS.py"]) 
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 647 <= mouse_pos[0] <= 823:
