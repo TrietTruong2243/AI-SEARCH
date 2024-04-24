@@ -16,7 +16,7 @@ WINDOW_HEIGHT = 768
 
 def draw_menu(window):
         # Load background image
-    background_image = pygame.image.load("background.png")
+    background_image = pygame.image.load(".\\images\\background.png")
     window.blit(background_image, (0, 0))
 
     font_option = pygame.font.SysFont('Courier New', 40)
@@ -63,29 +63,29 @@ def main():
                     if 335 <= mouse_pos[1] <= 410:
                         if 90 <= mouse_pos[0] <= 270:  # Check first row
                             print("Level 1!")
-                            subprocess.Popen(["python", "chooseMap.py", "L1_BFS.py"])  # Chạy L1.py
+                            subprocess.Popen(["python", "./source/chooseMap.py", "./source/L1_BFS.py"])  # Chạy L1.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 395 <= mouse_pos[0] <= 570:  # Second option
                             print("Level 3!")
-                            subprocess.Popen(["python", "chooseMap.py","L3.py"])  # Chạy L3.py
+                            subprocess.Popen(["python", "./source/chooseMap.py","./source/L3.py"])  # Chạy L3.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
 
                         elif 700 <= mouse_pos[0] <= 880:  # Check second row
                             print("Level 5!")
-                            subprocess.Popen(["python", "L5.py"])  # Chạy L5.py
+                            subprocess.Popen(["python", "./source/L5.py"])  # Chạy L5.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                     elif 470 <= mouse_pos[1] <= 545:
                         if 90 <= mouse_pos[0] <= 270:  # Check first row
                             print("Level 2!")
-                            subprocess.Popen(["python", "L2.py"])  # Chạy L2.py
+                            subprocess.Popen(["python", "./source/L2.py"])  # Chạy L2.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 395 <= mouse_pos[0] <= 575:  # Second option
                             print("Level 4!")
-                            subprocess.Popen(["python", "chooseMap.py", "chooseSpeed.py"])  # Chạy L4.py
+                            subprocess.Popen(["python", "./source/chooseMap.py", "./source/chooseSpeed.py"])  # Chạy L4.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 700 <= mouse_pos[0] <= 800:  # Check second row

@@ -1,15 +1,13 @@
 import pygame
 import sys
 import subprocess
-import pygame.font
+import queue
 import time
-import subprocess
+window_width = 1024 -200
+window_height = 768
 
-window_width = 1024 - 200
-window_height = 700
 
 window = pygame.display.set_mode((window_width + 200, window_height))
-
 
 LIGHT_BLACK = (50, 50, 50)
 LIGHT_BLUE = (48, 227, 202)
@@ -19,18 +17,17 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 BLUE = (78, 27, 202)
+if len(sys.argv) <2:
+    subprocess.Popen(["python", "./menu.py"])  # Quay về menu.py
+    pygame.quit()  # Thoát khỏi cửa sổ hiện tại
+    sys.exit()
+filename = sys.argv[1]
 
-def exists(var):
-    return var in globals() or var in locals()
+
 # Thêm trước khi sử dụng font
 pygame.font.init()
-font = pygame.font.SysFont('Inter', 26) # Chọn font và kích thước
-# if len(sys.argv) <2:
-#     subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
-#     pygame.quit()  # Thoát khỏi cửa sổ hiện tại
-#     sys.exit()
-# filename = sys.argv[1]
-filename = "input3.txt"
+font = pygame.font.SysFont('Inter', 24) # Chọn font và kích thước
+
 # read from txt input.txt
 def read_input():
     
@@ -100,13 +97,10 @@ box_width = window_width / cols
 box_height = window_height / rows
 
 grid = []
-queue = []
 path = []
 
 # Tìm các điểm nằm trên đa giác
 points_on_obstacles = points_on_polygon(obstacles)
-
-
 class Box:
     def __init__(self, x, y):
         self.x = x
@@ -119,7 +113,8 @@ class Box:
         self.queued = False
         self.neighbors = []
         self.previous = None
-        self.heuristic =0
+        self.goal = float('inf')  
+
          # Đánh số cho ô theo trục x và y mà không trùng lặp
         self.number = None
         
@@ -175,16 +170,10 @@ class Box:
             self.neighbors.append(grid[self.x][self.y + 1])
         if self.y > 0:
             self.neighbors.append(grid[self.x][self.y - 1])
-    def setHeuristic(self, target_box):
-        self.heuristic = abs(self.x - target_box.x) + abs(self.y-target_box.y) #eucildian
-        # self.heuristic = sqrt((self.x - target_box.x)**2 + (self.y - target_box.y)**2) #mahhatan
-
     def __lt__(self, other):
-        if (self.goal + self.heuristic) == (other.goal + other.heuristic):
+        if self.goal==other.goal:
             return False
-        return (self.goal + self.heuristic) < (other.goal + other.heuristic)
-
-
+        return self.goal < other.goal  # Compare boxes based on their accumulated cost
 
 # Create Grid with 2D Array
 for i in range(cols):
@@ -206,15 +195,16 @@ def main():
     # Load background image
     temp = 0
     start_time =0 
-    background_image = pygame.image.load("frameGame.png")
+    background_image = pygame.image.load("./images/frameGame.png")
     window.blit(background_image, (0, 0))
+    
+    visited_count = 0  # Biến đếm số ô đã visited
+    result = "Target Not Found!"
 
+    node_count  =0
     begin_search = False
     target_box = None
     searching = True
-    result = "Target Not Found!"
-    visited_count = 0  # Biến đếm số ô đã visited
-    # start_box = grid[0][0]
     start_box = None
     target_box = grid[goal["x"]][rows - 1 - goal["y"]]
     target_box.setEnd()
@@ -223,9 +213,13 @@ def main():
     start_box = grid[start["x"]][rows - 1 -start["y"]]
  
 
+    start_box = grid[start["x"]][rows - 1 -start["y"]]
     start_box.setStart()
     start_box.visited = True
-    queue.append(start_box)
+    start_box.queued = True
+    start_box.goal = 0
+    priority_queue = queue.PriorityQueue()
+    priority_queue.put(start_box)
 
     # set obstacles
     for i, points in enumerate(points_on_obstacles):
@@ -252,45 +246,50 @@ def main():
         if keys[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
-            
-    
-
-
-        if  start_time ==0: 
+        if start_time ==0: 
             if keys[pygame.K_SPACE ] and (temp < 1)  :
                 begin_search = True
                 start_time = time.time()
 
         if begin_search:
-            if len(queue) > 0 and searching:
-                # Sắp xếp danh sách queue dựa trên heuristic
-                queue.sort(key=lambda box: box.heuristic)
-                current_box = queue.pop(0)
+            if not priority_queue.empty():
+                current_box = priority_queue.get()  
                 current_box.visited = True
                 visited_count += 1
 
-                if current_box == target_box:
+                if current_box==target_box:
                     result = "Target Found!"
-                    searching = False
                     end_time = time.time()
+                    temp = temp +1
 
-                else:
-                    for neighbor in current_box.neighbors:
-                        if neighbor == target_box:
-                            result = "Target Found!"
-                            searching = False
-                            end_time = time.time()
-                            while current_box != start_box:
-                                path.append(current_box)
-                                current_box = current_box.previous
-                            # show start box in different color
-                            start_box.show(window, GREEN)
-                        elif not neighbor.obstacle and not neighbor.queued:
-                            neighbor.queued = True
-                            neighbor.previous = current_box
-                            neighbor.setHeuristic(target_box )
-                            queue.append(neighbor)
+                    while current_box != start_box:
+                        path.append(current_box)
+                        current_box = current_box.previous
+                        node_count = node_count+1
+                    searching = False
+                    begin_search = False
+                    start_box.show(window, GREEN)
+                    
 
+                for neighbor in current_box.neighbors:
+
+                            
+                    if not neighbor.obstacle and not neighbor.visited:
+                        neighbor.queued = True
+                        new_cost = current_box.goal + 1  # Assuming uniform cost for all moves
+                        if new_cost < neighbor.goal:  # If new path to neighbor is cheaper
+                            check = False
+                            for item in priority_queue.queue:
+                                if item==neighbor:
+                                    neighbor.goal = new_cost
+                                    neighbor.previous = current_box
+                                    priority_queue.queue.remove(item)
+                                    priority_queue.put(neighbor)
+                                    check = True
+                            if check ==False:
+                                neighbor.goal = new_cost
+                                neighbor.previous = current_box
+                                priority_queue.put(neighbor)
 
         for i in range(cols):
             for j in range(rows):
@@ -303,17 +302,20 @@ def main():
                     box.show(window, LIGHT_GRAY)  
                 if box.end == 1:
                     box.show(window, LIGHT_WHITE) 
-                if box.visited:
-                    box.show(window, GREEN)  
                 if box.queued:
                     if box == start_box:
                         box.show(window, YELLOW) 
                     else:
                         box.show(window, RED) 
+                if box.visited:
+                    if box == start_box:
+                        box.show(window, YELLOW) 
+                    else:
+                        box.show(window, GREEN)                 
                 if box in path:
                     box.show(window, BLUE)  
                     
-                if (len(queue) == 0 and searching == True):
+                if (len(priority_queue.queue) == 0 and searching == True):
                     text_surface = font.render("Result: ", False, RED)
                     text_rect = text_surface.get_rect()
                     # Đặt văn bản bên phải của cửa sổ
@@ -335,34 +337,41 @@ def main():
                     if box.obstacle == 1:
                         box.show(window, LIGHT_GRAY)  
                     if box.end == 1:
-                        box.show(window, LIGHT_WHITE)      
+                        box.show(window, LIGHT_WHITE)  
                 if not searching:
-                   
                     text_surface1 = font.render("Path length : " + str(len(path)), False, LIGHT_BLACK)
                     text_surface2 = font.render("Visited box : " + str(visited_count), False, LIGHT_BLACK)
                     text_surface3 = font.render("Time: " +"{:.2f}".format(end_time - start_time) + "s", False, LIGHT_BLACK)
                     text_surface4 = font.render("Result: " + result, False, RED)
+                    text_surface5 = font.render("Note: When searching, boxes highlighted in green are boxes that have been considered, boxes highlighted in red are boxes that have been added to the priority queue." , False, YELLOW)
 
                     text_rect1 = text_surface1.get_rect()
                     text_rect2 = text_surface2.get_rect()
                     text_rect3 = text_surface3.get_rect()
                     text_rect4 = text_surface4.get_rect()
+                    text_rect5 = text_surface5.get_rect()
+                    
                     # Đặt văn bản bên phải của cửa sổ
                     text_rect1.left = window_width + 8
                     text_rect2.left = window_width + 8
                     text_rect3.left = window_width  + 8
                     text_rect4.left = window_width  + 8
+                    text_rect5.left = window_width  + 8
 
                     text_rect1.top = 150 
                     text_rect2.top = 200 
                     text_rect3.top = 250 
                     text_rect4.top = 300 
-
+                    text_rect5.top = 300 
+                    
+                    
                     window.blit(text_surface1,text_rect1)
                     window.blit(text_surface2,text_rect2)
                     window.blit(text_surface3,text_rect3)
                     window.blit(text_surface4,text_rect4)
-             
+                    # window.blit(text_surface5,text_rect5)
+
+    
                     box.show(window, LIGHT_BLACK) 
                     if box in path:
                         box.show(window, BLUE) 

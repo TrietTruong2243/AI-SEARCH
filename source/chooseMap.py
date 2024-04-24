@@ -14,13 +14,13 @@ RED = (255, 0, 0)
 WINDOW_WIDTH = 1024
 WINDOW_HEIGHT = 768
 if len(sys.argv) <2:
-    subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
+    subprocess.Popen(["python", "./menu.py"])  # Quay về menu.py
     pygame.quit()  # Thoát khỏi cửa sổ hiện tại
     sys.exit()
 file = sys.argv[1]
 def draw_menu(window):
     # Load background image
-    background_image = pygame.image.load("chooseMapBg.png")
+    background_image = pygame.image.load("./images/chooseMapBg.png")
     window.blit(background_image, (0, 0))
     
 
@@ -76,32 +76,32 @@ def main_menu():
                     if 338 <= mouse_pos[1] <= 412:
                         if 198 <= mouse_pos[0] <= 376:
                             print("Map 1!")
-                            subprocess.Popen(["python",file, "input1.txt"]) 
+                            subprocess.Popen(["python",file, "./inputs/input1.txt"]) 
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 647 <= mouse_pos[0] <= 823:
                             print("Map 3!")
-                            subprocess.Popen(["python", file,"input3.txt"])
+                            subprocess.Popen(["python", file,"./inputs/input3.txt"])
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                     
                     elif 474 <= mouse_pos[1] <= 539:
                         if 198 <= mouse_pos[0] <= 376:
                             print("Map 2!")
-                            subprocess.Popen(["python", file,"input2.txt"])
+                            subprocess.Popen(["python", file,"./inputs/input2.txt"])
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
                         elif 647 <= mouse_pos[0] <= 823:
                             # Nút "Quay lại" được nhấp
                             print("Exit!")
-                            subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
+                            subprocess.Popen(["python", "./menu.py"])  # Quay về menu.py
                             pygame.quit()  # Thoát khỏi cửa sổ hiện tại
                             sys.exit()
 
                     elif 575 <= mouse_pos[1] <= 647:
                          if 424 <= mouse_pos[0] <= 601 :
                             print("No Padding!")
-                            subprocess.Popen(["python", file,"no_padding.txt"])
+                            subprocess.Popen(["python", file,"./inputs/no_padding.txt"])
                             pygame.quit()
                             sys.exit()
                          

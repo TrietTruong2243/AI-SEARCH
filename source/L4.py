@@ -19,7 +19,7 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 BLUE = (78, 27, 202)
 if len(sys.argv) <3:
-    subprocess.Popen(["python", "menu.py"])  # Quay về menu.py
+    subprocess.Popen(["python", "./menu.py"])  # Quay về menu.py
     pygame.quit()  # Thoát khỏi cửa sổ hiện tại
     sys.exit()
 filename = sys.argv[1]
@@ -211,7 +211,7 @@ def main():
     # Load background image
     temp = 0
     start_time =0 
-    background_image = pygame.image.load("frameGame.png")
+    background_image = pygame.image.load("./images/frameGame.png")
     window.blit(background_image, (0, 0))
     time_counter =0 
     visited_count = 0  # Biến đếm số ô đã visited
